@@ -92,10 +92,93 @@ abstract class NotiFilterDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_12_13 = object : Migration(12, 13) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS filters_new (
+                        regexPattern TEXT NOT NULL,
+                        action TEXT NOT NULL,
+                        regexTarget TEXT NOT NULL,
+                        secondaryRegexPattern TEXT,
+                        enabled INTEGER NOT NULL,
+                        historyEnabled INTEGER NOT NULL,
+                        widgetEnabled INTEGER NOT NULL DEFAULT 0,
+                        priority INTEGER NOT NULL DEFAULT 0,
+                        hits INTEGER NOT NULL,
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        app_name TEXT NOT NULL,
+                        app_packageName TEXT NOT NULL,
+                        schedule TEXT NOT NULL
+                    )
+                    """.trimIndent(),
+                )
+
+                val cursor = db.query(
+                    "SELECT id, schedule_start, schedule_end, schedule_days FROM filters"
+                )
+
+                val schedules = mutableMapOf<Int, String>()
+
+                cursor.use {
+                    val idIndex = it.getColumnIndexOrThrow("id")
+                    val startIndex = it.getColumnIndexOrThrow("schedule_start")
+                    val endIndex = it.getColumnIndexOrThrow("schedule_end")
+                    val daysIndex = it.getColumnIndexOrThrow("schedule_days")
+
+                    while (it.moveToNext()) {
+                        val id = it.getInt(idIndex)
+                        val start = it.getInt(startIndex)
+                        val end = it.getInt(endIndex)
+                        val days = it.getString(daysIndex)
+                            .split(",")
+                            .mapNotNull { day -> day.trim().toIntOrNull() }
+
+                        val rangeJson = when {
+                            start < end -> "[{\"start\":$start,\"end\":${end + 1}}]"
+                            start > end -> "[{\"start\":0,\"end\":${end + 1}},{\"start\":$start,\"end\":1440}]"
+                            else -> "[]"
+                        }
+
+                        val rangesJson = days.joinToString(",") { day ->
+                            "\"$day\":$rangeJson"
+                        }
+
+                        schedules[id] = "{\"ranges\":{$rangesJson}}"
+                    }
+                }
+
+                db.execSQL(
+                    """
+                    INSERT INTO filters_new (
+                        regexPattern, action, regexTarget, secondaryRegexPattern,
+                        enabled, historyEnabled, widgetEnabled, priority, hits, id,
+                        app_name, app_packageName, schedule
+                    )
+                    SELECT
+                        regexPattern, action, regexTarget, secondaryRegexPattern,
+                        enabled, historyEnabled, widgetEnabled, priority, hits, id,
+                        app_name, app_packageName, '{}'
+                    FROM filters
+                    """.trimIndent(),
+                )
+
+                schedules.forEach { (id, schedule) ->
+                    db.execSQL(
+                        "UPDATE filters_new SET schedule = ? WHERE id = ?",
+                        arrayOf(schedule, id),
+                    )
+                }
+
+                db.execSQL("DROP TABLE filters")
+                db.execSQL("ALTER TABLE filters_new RENAME TO filters")
+            }
+        }
+
         fun getDatabase(context: Context): NotiFilterDatabase {
             return instance ?: synchronized(this) {
                 Room.databaseBuilder(context, NotiFilterDatabase::class.java, "notifilter_database")
-                    .addMigrations(MIGRATION_9_10)
+                    .addMigrations(MIGRATION_9_10, MIGRATION_12_13)
                     .build().also { instance = it }
             }
         }
