@@ -934,6 +934,7 @@ private fun ColumnScope.ActionPage(viewModel: UpsertFilterViewModel) {
     }
 }
 
+```kotlin
 @Composable
 private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     val context = LocalContext.current
@@ -943,20 +944,31 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
         mutableStateOf<Triple<Int, Int, Boolean>?>(null)
     }
 
-    pickerTarget?.let { (day, rangeIndex, isEnd) ->
+    LaunchedEffect(pickerTarget) {
+        val target = pickerTarget ?: return@LaunchedEffect
+        val (day, rangeIndex, isEnd) = target
+
         val range = schedule.ranges[day]?.getOrNull(rangeIndex)
 
-        if (range != null) {
-            val initialMinutes = if (isEnd && range.end == 1440) 23 * 60 + 59
-            else if (isEnd) range.end
-            else range.start
+        if (range == null) {
+            pickerTarget = null
+            return@LaunchedEffect
+        }
 
-            TimePickerDialog(
-                context,
-                { _, hour, minute ->
-                    val newMinutes = hour * 60 + minute
-                    val newRanges = schedule.ranges.toMutableMap()
-                    val ranges = newRanges[day].orEmpty().toMutableList()
+        val initialMinutes = if (isEnd) {
+            range.end.coerceAtMost(1439)
+        } else {
+            range.start
+        }
+
+        TimePickerDialog(
+            context,
+            { _, hour, minute ->
+                val newMinutes = hour * 60 + minute
+                val newRanges = schedule.ranges.toMutableMap()
+                val ranges = newRanges[day].orEmpty().toMutableList()
+
+                if (rangeIndex in ranges.indices) {
                     val current = ranges[rangeIndex]
 
                     ranges[rangeIndex] = if (isEnd) {
@@ -973,14 +985,18 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                             schedule = schedule.copy(ranges = newRanges),
                         ),
                     )
+                }
 
-                    pickerTarget = null
-                },
-                initialMinutes / 60,
-                initialMinutes % 60,
-                false,
-            ).show()
-        }
+                pickerTarget = null
+            },
+            initialMinutes / 60,
+            initialMinutes % 60,
+            false,
+        ).apply {
+            setOnCancelListener {
+                pickerTarget = null
+            }
+        }.show()
     }
 
     Text(
@@ -1051,11 +1067,18 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                         )
                     }
 
-                    Spacer(Modifier.width(dimensionResource(R.dimen.padding_medium)))
+                    Spacer(
+                        Modifier.width(
+                            dimensionResource(R.dimen.padding_medium)
+                        )
+                    )
 
                     Text(
-                        if (ranges.isEmpty()) "Aucune plage"
-                        else "${ranges.size} plage${if (ranges.size > 1) "s" else ""}",
+                        if (ranges.isEmpty()) {
+                            "Aucune plage"
+                        } else {
+                            "${ranges.size} plage${if (ranges.size > 1) "s" else ""}"
+                        },
                         style = MaterialTheme.typography.labelLarge,
                     )
                 }
@@ -1064,7 +1087,9 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(start = dimensionResource(R.dimen.padding_large)),
+                            .padding(
+                                start = dimensionResource(R.dimen.padding_large)
+                            ),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
@@ -1083,7 +1108,9 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
 
                         Text(
                             stringResource(R.string.to),
-                            Modifier.padding(horizontal = dimensionResource(R.dimen.padding_small)),
+                            Modifier.padding(
+                                horizontal = dimensionResource(R.dimen.padding_small)
+                            ),
                             style = MaterialTheme.typography.labelLarge,
                         )
 
@@ -1105,38 +1132,56 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                             textDecoration = TextDecoration.Underline,
                         )
 
-                        Text(
-                            "24:00",
-                            Modifier
-                                .padding(start = dimensionResource(R.dimen.padding_small))
-                                .clickable {
-                                    val newRanges = schedule.ranges.toMutableMap()
-                                    val updatedRanges = newRanges[day]
-                                        .orEmpty()
-                                        .toMutableList()
-
-                                    updatedRanges[rangeIndex] = range.copy(end = 1440)
-                                    newRanges[day] = updatedRanges
-
-                                    viewModel.updateForm(
-                                        viewModel.state.page,
-                                        viewModel.state.values.copy(
-                                            schedule = schedule.copy(ranges = newRanges),
-                                        ),
+                        if (range.end != 1440) {
+                            Text(
+                                "24:00",
+                                Modifier
+                                    .padding(
+                                        start = dimensionResource(
+                                            R.dimen.padding_small
+                                        )
                                     )
-                                },
-                            style = MaterialTheme.typography.labelLarge,
-                        )
+                                    .clickable {
+                                        val newRanges =
+                                            schedule.ranges.toMutableMap()
+                                        val updatedRanges =
+                                            newRanges[day]
+                                                .orEmpty()
+                                                .toMutableList()
+
+                                        updatedRanges[rangeIndex] =
+                                            range.copy(end = 1440)
+
+                                        newRanges[day] = updatedRanges
+
+                                        viewModel.updateForm(
+                                            viewModel.state.page,
+                                            viewModel.state.values.copy(
+                                                schedule = schedule.copy(
+                                                    ranges = newRanges
+                                                ),
+                                            ),
+                                        )
+                                    },
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                        }
 
                         Text(
                             "×",
                             Modifier
-                                .padding(start = dimensionResource(R.dimen.padding_small))
+                                .padding(
+                                    start = dimensionResource(
+                                        R.dimen.padding_small
+                                    )
+                                )
                                 .clickable {
-                                    val newRanges = schedule.ranges.toMutableMap()
-                                    val updatedRanges = newRanges[day]
-                                        .orEmpty()
-                                        .toMutableList()
+                                    val newRanges =
+                                        schedule.ranges.toMutableMap()
+                                    val updatedRanges =
+                                        newRanges[day]
+                                            .orEmpty()
+                                            .toMutableList()
 
                                     updatedRanges.removeAt(rangeIndex)
 
@@ -1149,7 +1194,9 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                                     viewModel.updateForm(
                                         viewModel.state.page,
                                         viewModel.state.values.copy(
-                                            schedule = schedule.copy(ranges = newRanges),
+                                            schedule = schedule.copy(
+                                                ranges = newRanges
+                                            ),
                                         ),
                                     )
                                 },
@@ -1161,12 +1208,13 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                 Text(
                     "+ Ajouter une plage",
                     Modifier
-                        .padding(start = dimensionResource(R.dimen.padding_large))
+                        .padding(
+                            start = dimensionResource(R.dimen.padding_large)
+                        )
                         .clickable {
                             val newRanges = schedule.ranges.toMutableMap()
-                            val updatedRanges = newRanges[day]
-                                .orEmpty()
-                                .toMutableList()
+                            val updatedRanges =
+                                newRanges[day].orEmpty().toMutableList()
 
                             updatedRanges.add(TimeRange(0, 60))
                             newRanges[day] = updatedRanges
@@ -1174,7 +1222,9 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                             viewModel.updateForm(
                                 viewModel.state.page,
                                 viewModel.state.values.copy(
-                                    schedule = schedule.copy(ranges = newRanges),
+                                    schedule = schedule.copy(
+                                        ranges = newRanges
+                                    ),
                                 ),
                             )
                         },
@@ -1198,5 +1248,4 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
             fontWeight = FontWeight.Normal,
         )
     }
-}
 }
