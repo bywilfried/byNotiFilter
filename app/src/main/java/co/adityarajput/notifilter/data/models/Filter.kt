@@ -23,7 +23,6 @@ data class Filter(
 
     val secondaryRegexPattern: String? = null,
 
-    @Embedded(prefix = "schedule_")
     val schedule: Schedule = Schedule(),
 
     val enabled: Boolean = true,
