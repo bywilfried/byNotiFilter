@@ -814,7 +814,7 @@ private fun ColumnScope.ActionPage(viewModel: UpsertFilterViewModel) {
                     { value ->
                         viewModel.updateForm(
                             viewModel.state.page,
-                            viewModel.state.values.copy(action = action.copy(contentTemplate = value)),
+                            viewModel.state.values.copy(contentTemplate = value),
                         )
                     },
                     Modifier.fillMaxWidth(),
@@ -1003,7 +1003,7 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     ) {
         listOf(2, 3, 4, 5, 6, 7, 1).forEach { day ->
             val dayName = java.text.DateFormatSymbols
-                .getInstance(Locale.getDefault())
+                .getInstance(Locale.ENGLISH)
                 .weekdays[day]
             val ranges = schedule.ranges[day].orEmpty()
 
