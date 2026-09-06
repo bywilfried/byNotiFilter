@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -90,13 +89,9 @@ fun UpsertFilterScreen(
                 ) {
                     when (it) {
                         FormPage.ZAPPER -> ZapperPage(viewModel)
-
                         FormPage.PACKAGE -> PackagePage(viewModel)
-
                         FormPage.PATTERN -> PatternPage(viewModel)
-
                         FormPage.ACTION -> ActionPage(viewModel)
-
                         FormPage.SCHEDULE -> SchedulePage(viewModel)
                     }
                 }
@@ -190,7 +185,6 @@ private fun ZapperPage(viewModel: UpsertFilterViewModel) {
         ) {
             items(viewModel.activeNotifications, { it.id }) {
                 val appName = it.appNameFrom(viewModel.allPackages)
-
                 Tile(
                     it.title,
                     it.content,
@@ -744,9 +738,7 @@ private fun ColumnScope.ActionPage(viewModel: UpsertFilterViewModel) {
                 if (!hasPermissions.getValue(Permission.NOTIFICATION_POLICY)) {
                     ErrorText(R.string.notification_policy_permission_description)
                     Button(
-                        {
-                            context.request(Permission.NOTIFICATION_POLICY)
-                        },
+                        { context.request(Permission.NOTIFICATION_POLICY) },
                         Modifier.align(Alignment.CenterHorizontally),
                         colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.onPrimaryContainer),
                     ) {
@@ -949,7 +941,6 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     LaunchedEffect(pickerTarget) {
         val target = pickerTarget ?: return@LaunchedEffect
         val (day, rangeIndex, isEnd) = target
-
         val range = schedule.ranges[day]?.getOrNull(rangeIndex)
 
         if (range == null) {
@@ -972,15 +963,12 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
 
                 if (rangeIndex in ranges.indices) {
                     val current = ranges[rangeIndex]
-
                     ranges[rangeIndex] = if (isEnd) {
                         current.copy(end = newMinutes)
                     } else {
                         current.copy(start = newMinutes)
                     }
-
                     newRanges[day] = ranges
-
                     viewModel.updateForm(
                         viewModel.state.page,
                         viewModel.state.values.copy(
@@ -988,7 +976,6 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                         ),
                     )
                 }
-
                 pickerTarget = null
             },
             initialMinutes / 60,
@@ -1014,8 +1001,10 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     Column(
         Modifier.fillMaxWidth(),
     ) {
-        stringArrayResource(R.array.days_initials).forEachIndexed { i, dayName ->
-            val day = i + 1
+        listOf(2, 3, 4, 5, 6, 7, 1).forEach { day ->
+            val dayName = java.text.DateFormatSymbols
+                .getInstance(Locale.getDefault())
+                .weekdays[day]
             val ranges = schedule.ranges[day].orEmpty()
 
             Column(
@@ -1039,7 +1028,6 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                                 if (ranges.isEmpty()) {
                                     val newRanges = schedule.ranges.toMutableMap()
                                     newRanges[day] = listOf(TimeRange(0, 60))
-
                                     viewModel.updateForm(
                                         viewModel.state.page,
                                         viewModel.state.values.copy(
@@ -1049,7 +1037,6 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                                 } else {
                                     val newRanges = schedule.ranges.toMutableMap()
                                     newRanges.remove(day)
-
                                     viewModel.updateForm(
                                         viewModel.state.page,
                                         viewModel.state.values.copy(
@@ -1144,18 +1131,12 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                                         )
                                     )
                                     .clickable {
-                                        val newRanges =
-                                            schedule.ranges.toMutableMap()
-                                        val updatedRanges =
-                                            newRanges[day]
-                                                .orEmpty()
-                                                .toMutableList()
-
-                                        updatedRanges[rangeIndex] =
-                                            range.copy(end = 1440)
-
+                                        val newRanges = schedule.ranges.toMutableMap()
+                                        val updatedRanges = newRanges[day]
+                                            .orEmpty()
+                                            .toMutableList()
+                                        updatedRanges[rangeIndex] = range.copy(end = 1440)
                                         newRanges[day] = updatedRanges
-
                                         viewModel.updateForm(
                                             viewModel.state.page,
                                             viewModel.state.values.copy(
@@ -1178,13 +1159,10 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                                     )
                                 )
                                 .clickable {
-                                    val newRanges =
-                                        schedule.ranges.toMutableMap()
-                                    val updatedRanges =
-                                        newRanges[day]
-                                            .orEmpty()
-                                            .toMutableList()
-
+                                    val newRanges = schedule.ranges.toMutableMap()
+                                    val updatedRanges = newRanges[day]
+                                        .orEmpty()
+                                        .toMutableList()
                                     updatedRanges.removeAt(rangeIndex)
 
                                     if (updatedRanges.isEmpty()) {
@@ -1215,12 +1193,9 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                         )
                         .clickable {
                             val newRanges = schedule.ranges.toMutableMap()
-                            val updatedRanges =
-                                newRanges[day].orEmpty().toMutableList()
-
+                            val updatedRanges = newRanges[day].orEmpty().toMutableList()
                             updatedRanges.add(TimeRange(0, 60))
                             newRanges[day] = updatedRanges
-
                             viewModel.updateForm(
                                 viewModel.state.page,
                                 viewModel.state.values.copy(
