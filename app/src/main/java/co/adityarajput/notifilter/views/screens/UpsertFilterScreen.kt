@@ -938,127 +938,265 @@ private fun ColumnScope.ActionPage(viewModel: UpsertFilterViewModel) {
 private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     val context = LocalContext.current
     val schedule = viewModel.state.values.schedule
-    val startTimePicker = TimePickerDialog(
-        context,
-        { _, hour: Int, minute: Int ->
-            viewModel.updateForm(
-                viewModel.state.page,
-                viewModel.state.values.copy(schedule = viewModel.state.values.schedule.copy(start = hour * 60 + minute)),
-            )
-        },
-        viewModel.state.values.schedule.start / 60,
-        viewModel.state.values.schedule.start % 60,
-        false,
-    )
-    val endTimePicker = TimePickerDialog(
-        context,
-        { _, hour: Int, minute: Int ->
-            viewModel.updateForm(
-                viewModel.state.page,
-                viewModel.state.values.copy(schedule = viewModel.state.values.schedule.copy(end = hour * 60 + minute)),
-            )
-        },
-        viewModel.state.values.schedule.end / 60,
-        viewModel.state.values.schedule.end % 60,
-        false,
-    )
+
+    var pickerTarget by remember {
+        mutableStateOf<Triple<Int, Int, Boolean>?>(null)
+    }
+
+    pickerTarget?.let { (day, rangeIndex, isEnd) ->
+        val range = schedule.ranges[day]?.getOrNull(rangeIndex)
+
+        if (range != null) {
+            val initialMinutes = if (isEnd && range.end == 1440) 23 * 60 + 59
+            else if (isEnd) range.end
+            else range.start
+
+            TimePickerDialog(
+                context,
+                { _, hour, minute ->
+                    val newMinutes = hour * 60 + minute
+                    val newRanges = schedule.ranges.toMutableMap()
+                    val ranges = newRanges[day].orEmpty().toMutableList()
+                    val current = ranges[rangeIndex]
+
+                    ranges[rangeIndex] = if (isEnd) {
+                        current.copy(end = newMinutes)
+                    } else {
+                        current.copy(start = newMinutes)
+                    }
+
+                    newRanges[day] = ranges
+
+                    viewModel.updateForm(
+                        viewModel.state.page,
+                        viewModel.state.values.copy(
+                            schedule = schedule.copy(ranges = newRanges),
+                        ),
+                    )
+
+                    pickerTarget = null
+                },
+                initialMinutes / 60,
+                initialMinutes % 60,
+                false,
+            ).show()
+        }
+    }
 
     Text(
         stringResource(R.string.schedule_page_title),
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Normal,
     )
-    Row(
-        Modifier.fillMaxWidth(),
-        Arrangement.Start,
-        Alignment.CenterVertically,
-    ) {
-        Text(
-            stringResource(R.string.run_from),
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Normal,
-        )
-        Text(
-            String.format(
-                Locale.getDefault(),
-                "%02d:%02d",
-                viewModel.state.values.schedule.start / 60,
-                viewModel.state.values.schedule.start % 60,
-            ),
-            Modifier.clickable { startTimePicker.show() },
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Normal,
-            textDecoration = TextDecoration.Underline,
-        )
-        Text(
-            stringResource(R.string.to),
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Normal,
-        )
-        Text(
-            String.format(
-                Locale.getDefault(),
-                "%02d:%02d",
-                viewModel.state.values.schedule.end / 60,
-                viewModel.state.values.schedule.end % 60,
-            ),
-            Modifier.clickable { endTimePicker.show() },
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Normal,
-            textDecoration = TextDecoration.Underline,
-        )
-        Text(
-            stringResource(R.string.on),
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Normal,
-        )
-    }
-    if (viewModel.state.error == FormError.INVALID_TIME_RANGE) ErrorText(R.string.invalid_time_range)
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
-        Arrangement.SpaceBetween,
-    ) {
-        stringArrayResource(R.array.days_initials).forEachIndexed { i, day ->
-            val index = i + 1
-            val selected = viewModel.state.values.schedule.days.contains(index)
 
-            Box(
+    if (viewModel.state.error == FormError.INVALID_TIME_RANGE) {
+        ErrorText(R.string.invalid_time_range)
+    }
+
+    Column(
+        Modifier.fillMaxWidth(),
+    ) {
+        stringArrayResource(R.array.days_initials).forEachIndexed { i, dayName ->
+            val day = i + 1
+            val ranges = schedule.ranges[day].orEmpty()
+
+            Column(
                 Modifier
-                    .background(
-                        if (selected) MaterialTheme.colorScheme.primary
-                        else Color.Transparent,
-                        CircleShape,
-                    )
-                    .padding(dimensionResource(R.dimen.padding_small))
-                    .selectable(selected) {
-                        val newDays =
-                            viewModel.state.values.schedule.days.toMutableSet()
-                        if (newDays.contains(index)) newDays.remove(index)
-                        else newDays.add(index)
-                        viewModel.updateForm(
-                            viewModel.state.page,
-                            viewModel.state.values.copy(
-                                schedule = viewModel.state.values.schedule.copy(days = newDays),
-                            ),
-                        )
-                    },
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(R.dimen.padding_small)),
             ) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        Modifier
+                            .background(
+                                if (ranges.isNotEmpty()) MaterialTheme.colorScheme.primary
+                                else Color.Transparent,
+                                CircleShape,
+                            )
+                            .padding(dimensionResource(R.dimen.padding_small))
+                            .selectable(ranges.isNotEmpty()) {
+                                if (ranges.isEmpty()) {
+                                    val newRanges = schedule.ranges.toMutableMap()
+                                    newRanges[day] = listOf(TimeRange(0, 60))
+
+                                    viewModel.updateForm(
+                                        viewModel.state.page,
+                                        viewModel.state.values.copy(
+                                            schedule = schedule.copy(ranges = newRanges),
+                                        ),
+                                    )
+                                } else {
+                                    val newRanges = schedule.ranges.toMutableMap()
+                                    newRanges.remove(day)
+
+                                    viewModel.updateForm(
+                                        viewModel.state.page,
+                                        viewModel.state.values.copy(
+                                            schedule = schedule.copy(ranges = newRanges),
+                                        ),
+                                    )
+                                }
+                            },
+                    ) {
+                        Text(
+                            dayName,
+                            color = if (ranges.isNotEmpty())
+                                MaterialTheme.colorScheme.onSurface
+                            else
+                                MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                    }
+
+                    Spacer(Modifier.width(dimensionResource(R.dimen.padding_medium)))
+
+                    Text(
+                        if (ranges.isEmpty()) "Aucune plage"
+                        else "${ranges.size} plage${if (ranges.size > 1) "s" else ""}",
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
+
+                ranges.forEachIndexed { rangeIndex, range ->
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = dimensionResource(R.dimen.padding_large)),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            String.format(
+                                Locale.getDefault(),
+                                "%02d:%02d",
+                                range.start / 60,
+                                range.start % 60,
+                            ),
+                            Modifier.clickable {
+                                pickerTarget = Triple(day, rangeIndex, false)
+                            },
+                            style = MaterialTheme.typography.labelLarge,
+                            textDecoration = TextDecoration.Underline,
+                        )
+
+                        Text(
+                            stringResource(R.string.to),
+                            Modifier.padding(horizontal = dimensionResource(R.dimen.padding_small)),
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+
+                        Text(
+                            if (range.end == 1440) {
+                                "24:00"
+                            } else {
+                                String.format(
+                                    Locale.getDefault(),
+                                    "%02d:%02d",
+                                    range.end / 60,
+                                    range.end % 60,
+                                )
+                            },
+                            Modifier.clickable {
+                                pickerTarget = Triple(day, rangeIndex, true)
+                            },
+                            style = MaterialTheme.typography.labelLarge,
+                            textDecoration = TextDecoration.Underline,
+                        )
+
+                        Text(
+                            "24:00",
+                            Modifier
+                                .padding(start = dimensionResource(R.dimen.padding_small))
+                                .clickable {
+                                    val newRanges = schedule.ranges.toMutableMap()
+                                    val updatedRanges = newRanges[day]
+                                        .orEmpty()
+                                        .toMutableList()
+
+                                    updatedRanges[rangeIndex] = range.copy(end = 1440)
+                                    newRanges[day] = updatedRanges
+
+                                    viewModel.updateForm(
+                                        viewModel.state.page,
+                                        viewModel.state.values.copy(
+                                            schedule = schedule.copy(ranges = newRanges),
+                                        ),
+                                    )
+                                },
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+
+                        Text(
+                            "×",
+                            Modifier
+                                .padding(start = dimensionResource(R.dimen.padding_small))
+                                .clickable {
+                                    val newRanges = schedule.ranges.toMutableMap()
+                                    val updatedRanges = newRanges[day]
+                                        .orEmpty()
+                                        .toMutableList()
+
+                                    updatedRanges.removeAt(rangeIndex)
+
+                                    if (updatedRanges.isEmpty()) {
+                                        newRanges.remove(day)
+                                    } else {
+                                        newRanges[day] = updatedRanges
+                                    }
+
+                                    viewModel.updateForm(
+                                        viewModel.state.page,
+                                        viewModel.state.values.copy(
+                                            schedule = schedule.copy(ranges = newRanges),
+                                        ),
+                                    )
+                                },
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                    }
+                }
+
                 Text(
-                    day,
-                    color = if (selected) MaterialTheme.colorScheme.onSurface
-                    else MaterialTheme.colorScheme.primary,
+                    "+ Ajouter une plage",
+                    Modifier
+                        .padding(start = dimensionResource(R.dimen.padding_large))
+                        .clickable {
+                            val newRanges = schedule.ranges.toMutableMap()
+                            val updatedRanges = newRanges[day]
+                                .orEmpty()
+                                .toMutableList()
+
+                            updatedRanges.add(TimeRange(0, 60))
+                            newRanges[day] = updatedRanges
+
+                            viewModel.updateForm(
+                                viewModel.state.page,
+                                viewModel.state.values.copy(
+                                    schedule = schedule.copy(ranges = newRanges),
+                                ),
+                            )
+                        },
                     style = MaterialTheme.typography.labelLarge,
+                    textDecoration = TextDecoration.Underline,
                 )
             }
         }
     }
-    if (viewModel.state.error == FormError.BLANK_FIELDS) ErrorText(R.string.empty_active_days)
-    if (viewModel.state.values.action.let { it is Action.DELAY && it.delayLength == null })
+
+    if (viewModel.state.error == FormError.BLANK_FIELDS) {
+        ErrorText(R.string.empty_active_days)
+    }
+
+    if (viewModel.state.values.action.let {
+            it is Action.DELAY && it.delayLength == null
+        }) {
         Text(
             stringResource(R.string.delay_action_reminder),
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Normal,
         )
+    }
+}
 }
