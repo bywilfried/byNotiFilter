@@ -937,6 +937,7 @@ private fun ColumnScope.ActionPage(viewModel: UpsertFilterViewModel) {
 @Composable
 private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     val context = LocalContext.current
+    val schedule = viewModel.state.values.schedule
     val startTimePicker = TimePickerDialog(
         context,
         { _, hour: Int, minute: Int ->
