@@ -38,6 +38,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard/nightly.pro",
             )
+            signingConfig = signingConfigs.getByName("debug")
             applicationIdSuffix = ".fork"
             resValue("string", "app_name_launcher", "NotiFilterFork")
         }
