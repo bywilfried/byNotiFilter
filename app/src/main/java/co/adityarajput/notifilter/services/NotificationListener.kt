@@ -243,17 +243,12 @@ class NotificationListener : NotificationListenerService() {
             is Action.DELAY -> {
                 val zone = ZoneId.systemDefault()
                 val now = ZonedDateTime.now(zone)
-                val delay =
-                    if (filter.action.delayLength != null)
-                        filter.action.delayLength * 60 * 1000L
-                    else
-                        now.until(
-                            now.toLocalDate()
-                                .plusDays(if (filter.schedule.end < filter.schedule.start) 1 else 0)
-                                .atStartOfDay(zone)
-                                .plusMinutes(filter.schedule.end.toLong()),
-                            MILLIS,
-                        )
+                val delay = if (filter.action.delayLength != null) {
+                    filter.action.delayLength * 60 * 1000L
+                } else {
+                    val rangeEnd = filter.schedule.endOfActiveRange(now) ?: return
+                    now.until(rangeEnd, MILLIS)
+                }
 
                 if (delay < 1000L) {
                     Logger.d("NotificationListener", "Less than 1 second of delay")
