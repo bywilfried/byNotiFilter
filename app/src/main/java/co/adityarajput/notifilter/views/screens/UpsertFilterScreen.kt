@@ -814,7 +814,7 @@ private fun ColumnScope.ActionPage(viewModel: UpsertFilterViewModel) {
                     { value ->
                         viewModel.updateForm(
                             viewModel.state.page,
-                            viewModel.state.values.copy(contentTemplate = value),
+                            viewModel.state.values.copy(action = action.copy(contentTemplate = value)),
                         )
                     },
                     Modifier.fillMaxWidth(),
