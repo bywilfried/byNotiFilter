@@ -145,7 +145,7 @@ class UpsertFilterViewModel(
 
             FormPage.SCHEDULE -> {
                 if (!values.schedule.isRangeValid()) return FormError.INVALID_TIME_RANGE
-                if (values.schedule.days.isEmpty()) return FormError.BLANK_FIELDS
+                if (values.schedule.ranges.values.all { it.isEmpty() }) return FormError.BLANK_FIELDS
             }
         }
         return null
