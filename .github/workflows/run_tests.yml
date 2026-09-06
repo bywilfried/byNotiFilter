@@ -5,6 +5,11 @@ on:
     branches:
       - dev
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
 jobs:
   run-tests:
     runs-on: ubuntu-latest
