@@ -48,7 +48,9 @@ class AppContainer(private val context: Context) {
                         "software update",
                         Action.TAP_BUTTON("Remind me"),
                         RegexTarget.CONTENT,
-                        schedule = Schedule(days = setOf(2, 3, 4, 5, 6)),
+                        schedule = Schedule(
+                            ranges = (2..6).associateWith { listOf(TimeRange(0, 1440)) },
+                        ),
                         hits = 23,
                     ),
                     Filter(
@@ -65,7 +67,11 @@ class AppContainer(private val context: Context) {
                         Action.DELAY(),
                         RegexTarget.AND,
                         "^Bob",
-                        schedule = Schedule(start = 9 * 60, end = 17 * 60),
+                        schedule = Schedule(
+                            ranges = (1..7).associateWith {
+                                listOf(TimeRange(9 * 60, 17 * 60 + 1))
+                            },
+                        ),
                         hits = 15,
                     ),
                     Filter(
