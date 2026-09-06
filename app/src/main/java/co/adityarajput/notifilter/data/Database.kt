@@ -10,7 +10,7 @@ import co.adityarajput.notifilter.data.models.Notification
 
 @Database(
     entities = [Filter::class, Notification::class],
-    version = 12,
+    version = 13,
     autoMigrations = [
         AutoMigration(1, 2), AutoMigration(2, 3), AutoMigration(3, 4),
         AutoMigration(4, 5), AutoMigration(5, 6),
