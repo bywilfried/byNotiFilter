@@ -1064,9 +1064,9 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
 
                     Text(
                         if (ranges.isEmpty()) {
-                            "Aucune plage"
+                            "No time ranges"
                         } else {
-                            "${ranges.size} plage${if (ranges.size > 1) "s" else ""}"
+                            "${ranges.size} time range${if (ranges.size > 1) "s" else ""}"
                         },
                         style = MaterialTheme.typography.labelLarge,
                     )
@@ -1186,7 +1186,7 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                 }
 
                 Text(
-                    "+ Ajouter une plage",
+                    "+ Add time range",
                     Modifier
                         .padding(
                             start = dimensionResource(R.dimen.padding_large)
