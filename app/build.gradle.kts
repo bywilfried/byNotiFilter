@@ -38,8 +38,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard/nightly.pro",
             )
-            applicationIdSuffix = ".nightly"
-            resValue("string", "app_name_launcher", "NotiFilter Nightly")
+            applicationIdSuffix = ".fork"
+            resValue("string", "app_name_launcher", "NotiFilterFork")
         }
         release {
             isDebuggable = false
