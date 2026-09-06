@@ -80,8 +80,11 @@ fun UpsertFilterScreen(
             ) {
                 Column(
                     Modifier.fillMaxWidth().run {
-                        if (it == FormPage.ACTION) this.verticalScroll(rememberScrollState())
-                        else this
+                        if (it == FormPage.ACTION || it == FormPage.SCHEDULE) {
+                            this.verticalScroll(rememberScrollState())
+                        } else {
+                            this
+                        }
                     },
                     Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
                 ) {
@@ -934,7 +937,6 @@ private fun ColumnScope.ActionPage(viewModel: UpsertFilterViewModel) {
     }
 }
 
-```kotlin
 @Composable
 private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     val context = LocalContext.current
