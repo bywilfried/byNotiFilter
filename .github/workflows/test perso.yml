@@ -1,3 +1,4 @@
+```yaml
 name: Build APK perso
 
 on:
@@ -25,7 +26,7 @@ jobs:
       - name: Compiler l'APK
         run: ./gradlew app:assembleNightly
 
-      - name: Renommer l'APK
+      - name: Préparer l'APK
         run: |
           mkdir -p build-apk
           cp app/build/outputs/apk/nightly/*.apk build-apk/NotiFilter.apk
@@ -36,3 +37,4 @@ jobs:
           name: NotiFilter-APK
           path: build-apk/NotiFilter.apk
           retention-days: 7
+```
