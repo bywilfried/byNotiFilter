@@ -1,4 +1,4 @@
-```yaml
+yaml
 name: Build APK perso
 
 on:
@@ -37,4 +37,3 @@ jobs:
           name: NotiFilter-APK
           path: build-apk/NotiFilter.apk
           retention-days: 7
-```
