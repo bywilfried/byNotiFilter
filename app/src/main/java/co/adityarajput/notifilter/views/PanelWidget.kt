@@ -155,7 +155,11 @@ private val sampleFilters = listOf(
         Action.DELAY(),
         RegexTarget.AND,
         "^Bob",
-        schedule = Schedule(start = 9 * 60, end = 17 * 60),
+        schedule = Schedule(
+            ranges = (1..7).associateWith {
+                listOf(TimeRange(9 * 60, 17 * 60 + 1))
+            },
+        ),
         hits = 15,
     ),
     Filter(
