@@ -166,7 +166,7 @@ abstract class NotiFilterDatabase : RoomDatabase() {
                 schedules.forEach { (id, schedule) ->
                     db.execSQL(
                         "UPDATE filters_new SET schedule = ? WHERE id = ?",
-                        arrayOf(schedule, id),
+                        arrayOf<Any>(schedule, id),
                     )
                 }
 
