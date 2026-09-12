@@ -30,7 +30,7 @@ jobs:
       - name: Build APK
         run: |
           ./gradlew app:assembleNightly
-          mv app/build/outputs/apk/nightly/app-nightly-unsigned.apk app/NotiFilter_nightly.apk
+          mv app/build/outputs/apk/nightly/app-nightly-unsigned.apk app/NotiFlow-app-dev.apk
 
       - name: Sign APK
         env:
@@ -38,10 +38,10 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         run: |
           echo "${KEYSTORE}" | base64 -d > apksign.keystore
-          ${ANDROID_HOME}/build-tools/34.0.0/apksigner sign --ks apksign.keystore --ks-pass env:SIGNING_STORE_PASSWORD "app/NotiFilter_nightly.apk"
+          ${ANDROID_HOME}/build-tools/34.0.0/apksigner sign --ks apksign.keystore --ks-pass env:SIGNING_STORE_PASSWORD "app/NotiFlow-app-dev.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NotiFilter_nightly
-          path: app/NotiFilter_nightly.apk
+          name: NotiFlow-app-dev
+          path: app/NotiFlow-app-dev.apk
