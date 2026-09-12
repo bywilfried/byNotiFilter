@@ -28,7 +28,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            resValue("string", "app_name_launcher", "NotiFilter Debug")
+            resValue("string", "app_name_launcher", "NotiFlow Debug")
         }
         create("nightly") {
             isDebuggable = false
@@ -40,7 +40,7 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
             applicationIdSuffix = ".fork"
-            resValue("string", "app_name_launcher", "NotiFilterFork")
+            resValue("string", "app_name_launcher", "NotiFlow")
         }
         release {
             isDebuggable = false
@@ -83,12 +83,6 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.material3)
     implementation(libs.aboutlibraries.compose)
     implementation(libs.jemoji)
     implementation(libs.acra.dialog)
