@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_time_ranges">Aucune plage horaire</string>
+    <string name="add_time_range">+ Ajouter une plage horaire</string>
+    <plurals name="time_range_count">
+        <item quantity="one">%1$d plage horaire</item>
+        <item quantity="other">%1$d plages horaires</item>
+    </plurals>
+</resources>
