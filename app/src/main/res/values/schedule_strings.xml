@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_time_ranges">No time ranges</string>
+    <string name="add_time_range">+ Add time range</string>
+    <plurals name="time_range_count">
+        <item quantity="one">%1$d time range</item>
+        <item quantity="other">%1$d time ranges</item>
+    </plurals>
+</resources>
