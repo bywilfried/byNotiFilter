@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- FiltersScreen -->
+    <string name="listener_uninitialized"><![CDATA[En attente de l’initialisation du service d’écoute des notifications par Android. <a href="https://github.com/BURG3R5/NotiFilter/wiki/Troubleshooting#stuck-on-waiting-for-os-to-initialize-notification-listener-service">Bloqué ?</a>]]></string>
+    <string name="no_filters">Aucun filtre ajouté.\nAppuyez sur + pour commencer.</string>
+    <string name="on_weekdays">"en semaine "</string>
+    <string name="on_weekends">"le week-end "</string>
+    <string name="on_days">"le %1$s "</string>
+    <string name="from_to">de %1$s à %2$s</string>
+    <string name="dismiss_short">rejeter la notification</string>
+    <string name="tap_notification_short">appuyer sur la notification</string>
+    <string name="tap_button_short">appuyer sur « %1$s »</string>
+    <string name="batch_short">regrouper toutes les %1$s</string>
+    <string name="delay_short">retarder les notifications</string>
+    <string name="delay_by_short">retarder les notifications de %1$s</string>
+    <string name="debounce_short">temporiser pendant %1$s</string>
+    <string name="mute_short">mettre la notification en sourdine</string>
+    <string name="alert_short">jouer une alerte</string>
+    <string name="disturb_short">désactiver Ne pas déranger pendant %1$s</string>
+    <string name="dismiss_stale_short">rejeter après %1$s</string>
+    <string name="replace_short">remplacer par %1$s | %2$s</string>
+    <string name="any_app">Toutes les applications</string>
+    <string name="history_disabled">historique désactivé</string>
+    <string name="filter_disabled">filtre désactivé</string>
+    <string name="adjust_priorities">Modifier les priorités</string>
+    <string name="move_up">Monter</string>
+    <string name="move_down">Descendre</string>
+    <string name="configure_notifications">Configurer les notifications</string>
+    <string name="toggle_history">%1$s l’historique</string>
+    <string name="disable_history_confirmation">Désactiver l’historique et réinitialiser les correspondances de ce filtre ? Les notifications rejetées ne seront plus enregistrées.</string>
+    <string name="enable_history_confirmation">Activer l’historique pour ce filtre ?</string>
+    <string name="toggle_filter">%1$s le filtre</string>
+    <string name="toggle_filter_confirmation">%1$s ce filtre ?</string>
+    <string name="delete_filter">Supprimer le filtre</string>
+    <string name="delete_confirmation">La suppression est définitive ; votre filtre et ses statistiques seront perdus.%1$s</string>
+    <string name="disable_suggestion">" Vous pouvez plutôt le désactiver."</string>
+    <string name="enable">Activer</string>
+    <string name="disable">Désactiver</string>
+    <string name="delete">Supprimer</string>
+    <string name="missing_permissions">Autorisations manquantes</string>
+    <string name="explain_missing_permissions">Vos filtres nécessitent les autorisations suivantes pour fonctionner :</string>
+    <string name="explain_accessibility_service_permission">Appuyer sur les notifications</string>
+    <string name="explain_post_notifications_permission">Publier des notifications</string>
+    <string name="explain_notification_policy_permission">Gérer le mode Ne pas déranger</string>
+    <string name="explain_exact_alarm_permission">Rejeter après un délai précis</string>
+    <string name="hide_permanently">Ne plus afficher</string>
+    <string name="done">Terminé</string>
+
+    <!-- SettingsScreen -->
+    <string name="settings">Paramètres</string>
+    <string name="settings_section_1">Améliorations facultatives</string>
+    <string name="explain_disabling_battery_optimization">Empêche Android de restreindre l’application</string>
+    <string name="run_in_foreground">Exécuter au premier plan</string>
+    <string name="explain_running_in_foreground">Place le service principal d’écoute au premier plan</string>
+    <string name="settings_section_2">Transfert de données</string>
+    <string name="import_filters">Importer des filtres</string>
+    <string name="import_warning">Remplace vos filtres actuels</string>
+    <string name="import_success">Filtres importés avec succès</string>
+    <string name="export_filters">Exporter les filtres</string>
+    <string name="export_explanation">Génère un fichier JSON</string>
+    <string name="export_success">Filtres exportés avec succès</string>
+    <string name="copy_logs">Copier les journaux</string>
+    <string name="view_licenses">Voir les licences</string>
+    <string name="copy_success">Journaux copiés dans le presse-papiers</string>
+    <string name="about_app">À propos de NotiFilter</string>
+
+    <!-- UpsertFilterScreen -->
+    <string name="add_filter">Ajouter un filtre</string>
+    <string name="edit_filter">Modifier le filtre</string>
+    <string name="no_active_notifications">En attente de notifications actives…</string>
+    <string name="zapper_page_title">Choisissez une notification à cibler</string>
+    <string name="package_page_title">Choisissez une application à cibler</string>
+    <string name="advanced_options">Options avancées</string>
+    <string name="target_all_apps">Cibler toutes les applications ?</string>
+    <string name="all_apps_warning">Il est rarement nécessaire de cibler toutes les applications. Cela peut provoquer des effets inattendus.</string>
+    <string name="show_system_packages">Afficher les applications système ?</string>
+    <string name="system_packages_warning">Les notifications des applications système peuvent contenir des informations critiques.</string>
+    <string name="package_name">Nom du paquet</string>
+    <string name="package_name_placeholder">Rechercher parmi les applications installées</string>
+    <string name="pattern_page_title">Configurez la méthode de correspondance</string>
+    <string name="search_text">Rechercher dans la notification :</string>
+    <string name="title">titre</string>
+    <string name="content">contenu</string>
+    <string name="title_or_content">titre ou contenu</string>
+    <string name="title_and_content">titre et contenu</string>
+    <string name="use_expression">Évaluer une expression</string>
+    <string name="notification_pattern">Motif de notification</string>
+    <string name="title_pattern">Motif du titre</string>
+    <string name="content_pattern">Motif du contenu</string>
+    <string name="expression">Expression</string>
+    <string name="pattern_placeholder">Saisissez une expression régulière</string>
+    <string name="expression_placeholder">Saisissez une expression valide</string>
+    <string name="pattern_supporting">"Saisissez un motif correspondant à « %1$s ». "</string>
+    <string name="or">ou</string>
+    <string name="generate">Générer ?</string>
+    <string name="pattern_advice"><![CDATA[Conseil : incluez les mots-clés et excluez les éléments non essentiels. Cliquez <a href="https://github.com/BURG3R5/NotiFilter/wiki/Examples">ici↗</a> pour voir des exemples.]]></string>
+    <string name="expression_advice"><![CDATA[Cliquez <a href="https://github.com/BURG3R5/NotiFilter/wiki/Expressions">ici↗</a> pour en savoir plus sur les expressions.]]></string>
+    <string name="invalid_regex">L’expression régulière contient des erreurs</string>
+    <string name="invalid_expression">L’expression contient des erreurs</string>
+    <string name="pattern_doesnt_match_title">Le motif ne correspond pas au titre de la notification sélectionnée</string>
+    <string name="pattern_doesnt_match_content">Le motif ne correspond pas au contenu de la notification sélectionnée</string>
+    <string name="expression_doesnt_match_notification">L’expression ne correspond pas aux données de la notification sélectionnée</string>
+    <string name="action_page_title">Choisissez l’action à effectuer</string>
+    <string name="dismiss_long">Rejeter la notification</string>
+    <string name="tap_notification_long">Appuyer sur la notification</string>
+    <string name="accessibility_service_description">NotiFilter nécessite un service d’accessibilité pour appuyer sur les notifications.</string>
+    <string name="enable_service">Activer le service</string>
+    <string name="tap_button_long">Appuyer sur un bouton</string>
+    <string name="button_pattern">Motif du bouton</string>
+    <string name="batch_long">Regrouper les notifications</string>
+    <string name="batch_frequency">Toutes les %1$s heure(s)</string>
+    <string name="delay_long">Retarder les notifications</string>
+    <string name="delay_while_active">Tant que le filtre est actif</string>
+    <string name="delay_for">Pendant une durée définie</string>
+    <string name="delay_length">Retarder de %1$s min</string>
+    <string name="debounce_long">Temporiser les notifications</string>
+    <string name="cooldown_length">Temporisation de %1$s min</string>
+    <string name="explain_debounce">Les notifications envoyées rapidement à la suite seront mises en sourdine.</string>
+    <string name="cant_debounce_any">La temporisation ne peut pas être utilisée en ciblant toutes les applications</string>
+    <string name="mute_long">Mettre les notifications en sourdine</string>
+    <string name="alert_long">Jouer une alerte</string>
+    <string name="alert_notifications_description">NotiFilter envoie de brèves notifications pour jouer les alertes.</string>
+    <string name="disturb_long">Désactiver « Ne pas déranger »</string>
+    <string name="pause_length">Réactiver après %1$s min</string>
+    <string name="notification_policy_permission_description">NotiFilter nécessite l’accès à la politique de notifications pour modifier le mode Ne pas déranger.</string>
+    <string name="dismiss_stale_long">Supprimer les notifications obsolètes</string>
+    <string name="retention_length">Rejeter après %1$s min</string>
+    <string name="exact_alarm_permission_description">NotiFilter doit être exempté de l’optimisation de la batterie pour effectuer les rejets différés.</string>
+    <string name="replace_long">Remplacer par une notification personnalisée</string>
+    <string name="title_template">Modèle de titre</string>
+    <string name="content_template">Modèle de contenu</string>
+    <string name="notification_template_advice"><![CDATA[Utilisez ${app}, ${title} et ${content} comme variables pour accéder aux données de la notification d’origine. Cliquez <a href="https://github.com/BURG3R5/NotiFilter/wiki/Notification-Data">ici↗</a> pour découvrir d’autres modèles.]]></string>
+    <string name="replace_notifications_description">NotiFilter rejette la notification d’origine et en envoie une nouvelle avec les valeurs choisies.</string>
+    <string name="display_options">Choisissez où afficher la notification interceptée</string>
+    <string name="describe_history_screen">Écran Historique de l’application</string>
+    <string name="describe_widget">Widget de journal sur l’écran d’accueil</string>
+    <string name="prompt_log_widget">Ajouter le widget à l’écran d’accueil</string>
+    <string name="make_tappable">Rendre les notifications cliquables</string>
+    <string name="schedule_page_title">Configurer une planification</string>
+    <string name="run_from">"Activer de "</string>
+    <string name="to">" à "</string>
+    <string name="on">" le"</string>
+    <string name="delay_action_reminder">Toute notification reçue pendant cette période sera mise en attente jusqu’à ce que le filtre devienne inactif.</string>
+    <string name="empty_active_days">Aucun jour sélectionné</string>
+    <string name="invalid_time_range">La plage horaire n’est pas valide</string>
+    <string name="cancel">Annuler</string>
+    <string name="back">Retour</string>
+    <string name="skip">Passer</string>
+    <string name="next">Suivant</string>
+    <string name="add">Ajouter</string>
+    <string name="save">Enregistrer</string>
+
+    <!-- NotificationsScreen -->
+    <string name="history">Historique</string>
+    <string name="no_notifications">Aucune notification bloquée pour le moment.</string>
+    <string name="clear_history">Effacer l’historique</string>
+    <string name="clear_history_confirmation">Supprimer toutes les notifications ?</string>
+
+    <!-- OnboardingScreen -->
+    <string name="onboarding_info_1">"NotiFilter exécute un service d’arrière-plan léger qui écoute toutes les notifications de l’appareil et les gère discrètement selon vos filtres.\n\nAucune donnée n’est envoyée hors de l’appareil ; NotiFilter n’a pas accès à Internet."</string>
+    <string name="grant_permission">Accorder l’autorisation</string>
+    <string name="onboarding_info_2">Sur certains appareils, l’optimisation de la batterie peut retarder le rejet des notifications et provoquer malgré tout une interruption initiale.\n\nCertains fabricants appliquent des optimisations encore plus agressives ; vous devrez peut-être activer « Exécuter au premier plan » dans les paramètres de l’application.</string>
+    <string name="disable_optimization">Désactiver l’optimisation</string>
+
+    <!-- AboutScreen -->
+    <string name="about">À propos</string>
+    <string name="app_description">" écoute toutes les notifications de l’appareil et gère discrètement celles qui correspondent à vos filtres."</string>
+    <string name="app_links"><![CDATA[Sous licence <a href="https://github.com/BURG3R5/NotiFilter/blob/master/LICENSE">GPLv3</a><br/>Code source disponible sur <a href="https://github.com/BURG3R5/NotiFilter">GitHub</a><br/>Consultez le <a href="https://github.com/BURG3R5/NotiFilter/wiki">wiki du projet</a> pour en savoir plus]]></string>
+    <string name="app_permissions"><![CDATA[Autorisations<small><ul><li>BIND_NOTIFICATION_LISTENER_SERVICE : écouter les notifications et y réagir</li><li>QUERY_ALL_PACKAGES : rechercher dans les applications installées lors de l’ajout de filtres</li><li>BIND_ACCESSIBILITY_SERVICE : exécuter les actions TAP_NOTIFICATION, le cas échéant</li><li>POST_NOTIFICATIONS : exécuter les actions ALERT, le cas échéant</li><li>ACCESS_NOTIFICATION_POLICY : exécuter les actions DISTURB, le cas échéant</li><li>REQUEST_IGNORE_BATTERY_OPTIMIZATIONS : exécuter les actions DISMISS_STALE, le cas échéant</li><li>FOREGROUND_SERVICE_SPECIAL_USE : placer facultativement le service principal au premier plan afin d’éviter les optimisations agressives d’Android</li></ul>D’autres autorisations peuvent être utilisées par des bibliothèques pour gérer certaines tâches, comme la mise à jour des widgets.</small>]]></string>
+    <string name="dev_credit"><![CDATA[Développé par <a href="https://github.com/BURG3R5/">BURG3R5</a>]]></string>
+
+    <!-- LicensesScreen -->
+    <string name="licenses">Licences</string>
+
+    <!-- Widget -->
+    <string name="log_widget_title">Journaux NotiFilter</string>
+    <string name="log_widget_description">Afficher les notifications journalisées</string>
+    <string name="no_notifications_logged">Aucune notification journalisée</string>
+    <string name="panel_widget_title">Commandes NotiFilter</string>
+    <string name="panel_widget_description">Activer ou désactiver les filtres</string>
+    <string name="no_filters_short">Aucun filtre ajouté</string>
+
+    <!-- alttext -->
+    <string name="alttext_app_logo">Logo de l’application</string>
+    <string name="alttext_back_button">Bouton Retour</string>
+    <string name="alttext_add">Ajouter</string>
+    <string name="alttext_subtract">Retirer</string>
+    <string name="alttext_logs">Journaux</string>
+    <string name="alttext_info">Informations</string>
+
+    <!-- system -->
+    <string name="foreground_notification_content">NotiFilter est en cours d’exécution</string>
+</resources>
