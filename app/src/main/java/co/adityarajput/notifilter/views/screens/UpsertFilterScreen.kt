@@ -980,7 +980,7 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
             },
             initialMinutes / 60,
             initialMinutes % 60,
-            false,
+            true,
         ).apply {
             setOnCancelListener {
                 pickerTarget = null
