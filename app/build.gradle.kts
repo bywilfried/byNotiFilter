@@ -16,7 +16,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "co.adityarajput.notifilter"
+        applicationId = "com.bywilfried.notiflow"
         minSdk = 29
         targetSdk = 36
         versionCode = 35
@@ -39,7 +39,7 @@ android {
                 "proguard/nightly.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
-            applicationIdSuffix = ".fork"
+            applicationIdSuffix = ".dev"
             resValue("string", "app_name_launcher", "NotiFlow-dev")
         }
         release {
