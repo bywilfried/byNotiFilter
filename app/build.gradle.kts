@@ -40,7 +40,7 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
             applicationIdSuffix = ".fork"
-            resValue("string", "app_name_launcher", "NotiFlow")
+            resValue("string", "app_name_launcher", "NotiFlow-dev")
         }
         release {
             isDebuggable = false
