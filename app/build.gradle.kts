@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+val notiFlowKeystorePath = System.getenv("NOTIFLOW_KEYSTORE_PATH")
+
 android {
     namespace = "co.adityarajput.notifilter"
     compileSdk {
@@ -25,6 +27,17 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (!notiFlowKeystorePath.isNullOrBlank()) {
+            create("notiFlow") {
+                storeFile = file(notiFlowKeystorePath)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
@@ -38,7 +51,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard/nightly.pro",
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (!notiFlowKeystorePath.isNullOrBlank()) {
+                signingConfigs.getByName("notiFlow")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             applicationIdSuffix = ".dev"
             resValue("string", "app_name_launcher", "NotiFlow-dev")
         }
@@ -50,6 +67,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard/release.pro",
             )
+            if (!notiFlowKeystorePath.isNullOrBlank()) {
+                signingConfig = signingConfigs.getByName("notiFlow")
+            }
         }
     }
     compileOptions {
