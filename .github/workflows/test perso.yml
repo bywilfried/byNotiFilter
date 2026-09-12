@@ -28,11 +28,11 @@ jobs:
       - name: Renommer l'APK
         run: |
           mkdir -p build-apk
-          cp app/build/outputs/apk/nightly/*.apk build-apk/NotiFilter.apk
+          cp app/build/outputs/apk/nightly/*.apk build-apk/NotiFlow-app-dev.apk
 
       - name: Mettre l'APK à disposition
         uses: actions/upload-artifact@v4
         with:
-          name: NotiFilter-APK
-          path: build-apk/NotiFilter.apk
+          name: NotiFlow-app-dev
+          path: build-apk/NotiFlow-app-dev.apk
           retention-days: 7
