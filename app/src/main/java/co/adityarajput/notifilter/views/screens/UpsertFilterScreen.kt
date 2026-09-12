@@ -1121,35 +1121,6 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                             textDecoration = TextDecoration.Underline,
                         )
 
-                        if (range.end != 1440) {
-                            Text(
-                                "24:00",
-                                Modifier
-                                    .padding(
-                                        start = dimensionResource(
-                                            R.dimen.padding_small
-                                        )
-                                    )
-                                    .clickable {
-                                        val newRanges = schedule.ranges.toMutableMap()
-                                        val updatedRanges = newRanges[day]
-                                            .orEmpty()
-                                            .toMutableList()
-                                        updatedRanges[rangeIndex] = range.copy(end = 1440)
-                                        newRanges[day] = updatedRanges
-                                        viewModel.updateForm(
-                                            viewModel.state.page,
-                                            viewModel.state.values.copy(
-                                                schedule = schedule.copy(
-                                                    ranges = newRanges
-                                                ),
-                                            ),
-                                        )
-                                    },
-                                style = MaterialTheme.typography.labelLarge,
-                            )
-                        }
-
                         Text(
                             "×",
                             Modifier
