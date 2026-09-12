@@ -957,7 +957,7 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
         TimePickerDialog(
             context,
             { _, hour, minute ->
-                val newMinutes = hour * 60 + minute
+                val newMinutes = if (isEnd && hour == 0 && minute == 0) 1440 else hour * 60 + minute
                 val newRanges = schedule.ranges.toMutableMap()
                 val ranges = newRanges[day].orEmpty().toMutableList()
 
