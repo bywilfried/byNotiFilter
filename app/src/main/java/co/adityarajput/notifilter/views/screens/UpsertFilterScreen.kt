@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -1003,7 +1004,7 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
     ) {
         listOf(2, 3, 4, 5, 6, 7, 1).forEach { day ->
             val dayName = java.text.DateFormatSymbols
-                .getInstance(Locale.ENGLISH)
+                .getInstance(Locale.getDefault())
                 .weekdays[day]
             val ranges = schedule.ranges[day].orEmpty()
 
@@ -1064,9 +1065,13 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
 
                     Text(
                         if (ranges.isEmpty()) {
-                            "No time ranges"
+                            stringResource(R.string.no_time_ranges)
                         } else {
-                            "${ranges.size} time range${if (ranges.size > 1) "s" else ""}"
+                            pluralStringResource(
+                                R.plurals.time_range_count,
+                                ranges.size,
+                                ranges.size,
+                            )
                         },
                         style = MaterialTheme.typography.labelLarge,
                     )
@@ -1157,7 +1162,7 @@ private fun SchedulePage(viewModel: UpsertFilterViewModel) {
                 }
 
                 Text(
-                    "+ Add time range",
+                    stringResource(R.string.add_time_range),
                     Modifier
                         .padding(
                             start = dimensionResource(R.dimen.padding_large)
