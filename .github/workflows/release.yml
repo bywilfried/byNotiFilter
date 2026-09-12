@@ -37,4 +37,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
           gzip: folders
-          files: NotiFilter_${{ github.ref_name }}.apk:app/build/outputs/apk/release/app-release-unsigned.apk
+          files: NotiFlow-app-release.apk:app/build/outputs/apk/release/app-release-unsigned.apk
