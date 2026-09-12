@@ -41,6 +41,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "NotiFlow")
             resValue("string", "app_name_launcher", "NotiFlow Debug")
         }
         create("nightly") {
@@ -57,6 +58,7 @@ android {
                 signingConfigs.getByName("debug")
             }
             applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "NotiFlow")
             resValue("string", "app_name_launcher", "NotiFlow-dev")
         }
         release {
@@ -70,6 +72,8 @@ android {
             if (!notiFlowKeystorePath.isNullOrBlank()) {
                 signingConfig = signingConfigs.getByName("notiFlow")
             }
+            resValue("string", "app_name", "NotiFlow")
+            resValue("string", "app_name_launcher", "NotiFlow")
         }
     }
     compileOptions {
